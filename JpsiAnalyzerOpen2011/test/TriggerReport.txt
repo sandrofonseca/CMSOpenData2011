@@ -1,0 +1,39 @@
+%MSG-i SiPixelQualityESProducer::SiPixelQualityESProducer:  (NoModuleName)  01-Jun-2017 15:28:27 CDT pre-events
+
+%MSG
+%MSG-i SiStripLorentzAngleDepESProducer:  (NoModuleName)  01-Jun-2017 15:28:27 CDT pre-events
+ctor
+%MSG
+%MSG-i SiStripQualityESProducer:  (NoModuleName) 01-Jun-2017 15:28:27 CDT  pre-events
+ctor
+%MSG
+%MSG-i SiStripDetInfoFileReader:  (NoModuleName) 01-Jun-2017 15:28:27 CDT  pre-events
+filePath /cvmfs/cms.cern.ch/slc6_amd64_gcc472/cms/cmssw/CMSSW_5_3_32/src/CalibTracker/SiStripCommon/data/SiStripDetInfo.dat
+%MSG
+%MSG-i SiStripDetInfoFileReader::SiStripDetInfoFileReader - END of file reached:  (NoModuleName) 01-Jun-2017 15:28:28 CDT pre-events
+
+%MSG
+%MSG-i HCAL:  (NoModuleName) 01-Jun-2017 15:28:28 CDT pre-events
+HcalHardcodeCalibrations::HcalHardcodeCalibrations->...
+%MSG
+%MSG-i CondDBESSource:  (NoModuleName) 01-Jun-2017 15:29:04 CDT pre-events
+Replacing connection string "frontier://PromptProd/CMS_COND_31X_L1T" and tag "L1MuCSCPtLut_CRAFT09v2_hlt" for record "L1MuCSCPtLutRcd" and label "" with connection string "frontier://FrontierProd/CMS_COND_31X_L1T" and tag L1MuCSCPtLut_key-11_mc"; from CondDBESSource::fillTagCollectionFromDB
+%MSG
+%MSG-i CondDBESSource:  (NoModuleName) 01-Jun-2017 15:29:04 CDT pre-events
+Replacing connection string "frontier://PromptProd/CMS_COND_31X_L1T" and tag "L1GtTriggerMenu_CRAFT09_hlt" for record "L1GtTriggerMenuRcd" and label "" with connection string "frontier://FrontierProd/CMS_COND_31X_L1T" and tag L1GtTriggerMenu_L1Menu_Collisions2012_v3_mc"; from CondDBESSource::fillTagCollectionFromDB
+%MSG
+%MSG-i CondDBESSource:  (NoModuleName) 01-Jun-2017 15:29:04 CDT pre-events
+Replacing connection string "frontier://PromptProd/CMS_COND_31X_L1T" and tag "L1JetEtScale_CRAFT09_hlt" for record "L1JetEtScaleRcd" and label "" with connection string "frontier://FrontierProd/CMS_COND_31X_L1T" and tag L1JetEtScale_GCTPhysics_2012_04_27_JetSeedThresh5GeV_mc"; from CondDBESSource::fillTagCollectionFromDB
+%MSG
+%MSG-i CondDBESSource:  (NoModuleName) 01-Jun-2017 15:29:04 CDT pre-events
+Replacing connection string "frontier://PromptProd/CMS_COND_31X_L1T" and tag "L1GctJetFinderParams_CRAFT09_hlt" for record "L1GctJetFinderParamsRcd" and label "" with connection string "frontier://FrontierProd/CMS_COND_31X_L1T" and tag L1GctJetFinderParams_GCTPhysics_2012_04_27_JetSeedThresh5GeV_mc"; from CondDBESSource::fillTagCollectionFromDB
+%MSG
+%MSG-i CondDBESSource:  (NoModuleName) 01-Jun-2017 15:29:04 CDT pre-events
+Replacing connection string "frontier://PromptProd/CMS_COND_31X_L1T" and tag "L1HfRingEtScale_CRAFT09_hlt" for record "L1HfRingEtScaleRcd" and label "" with connection string "frontier://FrontierProd/CMS_COND_31X_L1T" and tag L1HfRingEtScale_GCTPhysics_2012_04_27_JetSeedThresh5GeV_mc"; from CondDBESSource::fillTagCollectionFromDB
+%MSG
+%MSG-i CondDBESSource:  (NoModuleName) 01-Jun-2017 15:29:04 CDT pre-events
+Replacing connection string "frontier://PromptProd/CMS_COND_31X_L1T" and tag "L1MuDTTFParameters_CRAFT09_hlt" for record "L1MuDTTFParametersRcd" and label "" with connection string "frontier://FrontierProd/CMS_COND_31X_L1T" and tag L1MuDTTFParameters_dttf12_TSC_03_csc_col_mc"; from CondDBESSource::fillTagCollectionFromDB
+%MSG
+%MSG-i CondDBESSource:  (NoModuleName) 01-Jun-2017 15:29:04 CDT pre-events
+Replacing connection string "frontier://PromptProd/CMS_COND_31X_L1T" and tag "L1HtMissScale_CRAFT09_hlt" for record "L1HtMissScaleRcd" and label "" with connection string "frontier://FrontierProd/CMS_COND_31X_L1T" and tag L1HtMissScale_GCTPhysics_2012_04_27_JetSeedThresh5GeV_mc"; from CondDBESSource::fillTagCollectionFromDB
+%MSG
