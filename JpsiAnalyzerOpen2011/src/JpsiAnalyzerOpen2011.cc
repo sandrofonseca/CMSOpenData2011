@@ -163,7 +163,9 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		double minJPsiMass_ ;
 		// Trigger
 		edm::InputTag hlTriggerEvent_;      // Input tag for TriggerEvent
-		std::string triggerName_;
+		//std::string triggerName_;
+                std::vector<std::string> triggerName_;
+
 		edm::InputTag hlTriggerResults_;    // Input tag for TriggerResults
 		edm::InputTag collectionName_;
 		bool debug;
@@ -184,7 +186,7 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 
 		//Trigger
 		int countInAccepted = 0;
-		int countInTriggered = 0;
+		int countInTriggered = 0 ;
 		//Creating Vectors
 
 		std::vector<int> VectorEvent;
@@ -291,7 +293,8 @@ JpsiAnalyzerOpen2011::JpsiAnalyzerOpen2011(const edm::ParameterSet& iConfig):
 	muonTrailPt_ (iConfig.getParameter<double>("minMuonTrailPt")),
 	minJPsiMass_ (iConfig.getParameter<double>("minJPsiMass")),
 	hlTriggerEvent_ (iConfig.getUntrackedParameter<edm::InputTag>("TriggerEventTag", edm::InputTag("hltTriggerSummaryAOD", "", "HLT"))),
-	triggerName_ (iConfig.getUntrackedParameter<std::string>("PathName","HLT_Dimuon0_Jpsi_v")),
+//	triggerName_ (iConfig.getUntrackedParameter<std::string>("PathName","HLT_Dimuon0_Jpsi_v")),
+        triggerName_ (iConfig.getUntrackedParameter<std::vector<std::string>>("PathName")),
 	hlTriggerResults_  (iConfig.getUntrackedParameter<edm::InputTag>("TriggerResultsTag", edm::InputTag("TriggerResults", "", "HLT")))
 {
 	// Histos File
@@ -462,6 +465,7 @@ bool JpsiAnalyzerOpen2011::triggerfired(const edm::Event& ev, edm::Handle<edm::T
 		TString trigName=TrigNames_.triggerName(itr);
 		if (!triggerResultsHandle_->accept(itr)) continue;
 		if(trigName.Contains(trigname))      return true;
+		if(verbose_) std::cout << "HLT trigger Name avaliable (fired) : " << trigName << std::endl;
 	}
 	return false;
 }
@@ -497,16 +501,14 @@ unsigned int JpsiAnalyzerOpen2011::triggerIndex(const edm::Event& ev, edm::Handl
 
 // ------------ method called for each event  ------------
 	void
-JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
-{ //int countInAccepted = 0;
-	// int countInTriggered = 0;
-        	std::cout<<"******************* STARTING ANALYSIS************"<<std::endl;
+JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
+        if (verbose_) std::cout<<"******************* STARTING ANALYSIS************"<<std::endl;
 	ievt = iEvent.id().event();
 	irun = iEvent.run();
 	lumiBlock = iEvent.luminosityBlock();
 
 	if (verbose_) std::cout<<" Run # "<<irun<<" Evt # "<<ievt<<" lumiBlock # "<<lumiBlock<<std::endl;
-
+          
 	using namespace edm;
 	const reco::Vertex* vertex = 0;
 	edm::Handle< reco::VertexCollection > recoVertices;
@@ -533,23 +535,25 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 		std::cout << "HLT TriggerResults with label " << hlTriggerResults_ << " not found!";
 		return;
 	}
-
+          Total_Events++;
 
 	// Only events in which the path actually fired had stored the filter results and products:	  
-
-	bool triggerFound = triggerfound(iEvent,HLTR,triggerName_);
-	if(verbose_) std::cout<< "HLT trigger is fired: " << triggerFound << std::endl; 
-	if (triggerFound) countInAccepted++;
-	bool triggerFired = triggerfired(iEvent,HLTR,triggerName_);
-	if(verbose_) std::cout<< "TriggerFired : "<< triggerFired <<" Trigger Path :"<< triggerName_ << std::endl; 
+          for (unsigned int i=0; i<triggerName_.size(); i++) {   
+       
+	bool triggerFound = triggerfound(iEvent,HLTR,triggerName_[i]);
+	if (triggerFound) countInAccepted++; 
+        if (triggerFound == true && verbose_) std::cout<< "HLT trigger is found: " << triggerFound <<" Trigger Path found : " << triggerName_[i] << std::endl;
+	bool triggerFired = triggerfired(iEvent,HLTR,triggerName_[i]);
+        if (triggerFired) countInTriggered++; 
+        if (triggerFired == true && verbose_ ) std::cout<< "TriggerFired : "<< triggerFired <<" Trigger Path :"<< triggerName_[i] << std::endl; 
 	const unsigned int numberOfHltPaths = HLTR->size();
 	//const unsigned int numberOfHltFilters = triggerEventHandle_->sizeFilters();
 
 
 
-	unsigned int pathIndex = triggerIndex(iEvent,HLTR,triggerName_);
+	unsigned int pathIndex = triggerIndex(iEvent,HLTR,triggerName_[i]);
 	if (pathIndex>=numberOfHltPaths) {
-		std::cout << " WARNING: path " << triggerName_ << " out of range in TriggerResults" << std::endl;
+		std::cout << " WARNING: path " << triggerName_[i] << " out of range in TriggerResults" << std::endl;
 		return;
 	}
 
@@ -560,18 +564,11 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 		if (triggerFound) std::cout << " WARNING: path found in TriggerResults but it does not exist in HLTR" << std::endl;
 	}
 
+      }// loop trigger names
 
 
 	//  reco::Vertex vertex;
 	std::vector<reco::Muon> myLeptons;
-
-	//triggerFired
-	//triggerflag_
-	std::cout << " triggerFired: " << triggerFired << "----triggerflag: "<< triggerflag_ << std::endl;
-
-	Total_Events++;
-	if(triggerFired || triggerflag_){
-		if(triggerFired) countInTriggered++;
 		// Reco Muons
 		for (reco::MuonCollection::const_iterator muon = recoMuons->begin(); muon != recoMuons->end(); muon++) {
 			CounterMuons++;               
@@ -619,7 +616,7 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 				HistoMuonTight_Pt->Fill(muon->pt()) ;
 				HistoMuonTight_Eta->Fill(muon->eta()) ;
 				HistoMuonTight_Phi->Fill(muon->phi()) ;
-				HistoMuonTight_Charge->Fill(muon->charge()) ;
+				HistoMuonTight_Charge->Fill(muon->charge()) ;			HistoMuonTight_Mass->Fill(muon->mass());
 				HistoMuonTight_Mass->Fill(muon->mass());
 
 
@@ -738,7 +735,7 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 				} //end numberOfValidTrackerHits         
 			}//end TMOneStationTight 
 		} //Muon Loop
-	}// Trigger selection
+	//}// Trigger selection
 
 	std::sort(myLeptons.begin(),myLeptons.end(), [](const reco::Muon &a, const reco::Muon &b){
 			return a.pt() > b.pt();
@@ -814,18 +811,6 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 
 
 
-	/*	
-		if (leadingMuon.pt() >= muonLeadPt_ || trailingMuon.pt() >= muonTrailPt_ ) {
-// ***
-//   // jpsi peak
-//     // ***
-//
-if (Mll > minJPsiMass_ && Mll < maxJPsiMass_){
-nJpsi++;                           
-if(verbose_) std::cout<<" Invariant Mass in JPsi peak, pT, eta, phi " << Mll << " " << MllpT << " " << Mlleta << " " << Mllphi << std::endl;
-} else {return false;}// jpsi selection
-} else {return false;}//lead and trail muon pT cut
-*/
 
 
 }//end analize
@@ -939,9 +924,13 @@ JpsiAnalyzerOpen2011::endJob()
 {
 	//Fill the Trees
 	AnalysisTree->Fill();
-
+ 
 	std::cout << "Total_Events: " << Total_Events << std::endl; 
-	std::cout<<" N of Evts using Trigger Fired :"<< countInTriggered <<" Path: " <<  triggerName_ << std::endl; 
+         for (unsigned int i=0; i<triggerName_.size(); i++) {	
+        
+         std::cout<<" Path: " <<  triggerName_[i] << std::endl;
+        }
+        std::cout<<" N of Evts using Trigger Fired :"<< countInTriggered << std::endl; 
 	std::cout << "Muons after Trigger: " << CounterMuons << std::endl;
 	std::cout << "TMOneStationTight: "<< TMOneStationTight<<std::endl;
 	std::cout << "NumberOfValidMuonHits: " << NumberOfValidMuonHits << std::endl;
@@ -951,6 +940,7 @@ JpsiAnalyzerOpen2011::endJob()
 	std::cout << "PFMuon: " << PFMuon << std::endl;
 	std::cout << "TrackerGlobalMuon: " << TrackerGlobalMuon << std::endl;
 	std::cout << "nDimuon: " << nDimuon << std::endl;
+       //}
 
 }
 
