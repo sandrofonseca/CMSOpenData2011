@@ -26,7 +26,7 @@ process.TFileService = cms.Service ('TFileService',
     'histojpsi.root'
     )
 )
- 
+  
 process.demo = cms.EDAnalyzer('JpsiAnalyzerOpen2011',
         verbose = cms.bool(False),
 	triggerflag = cms.bool(True), # False = Data and True = MC		      
