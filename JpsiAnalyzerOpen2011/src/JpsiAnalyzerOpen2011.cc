@@ -519,6 +519,12 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 
 	edm::Handle< reco::MuonCollection > recoMuons;
 	iEvent.getByLabel(recoMuons_, recoMuons);
+        
+        Total_Events++;
+
+        if(triggerflag_){
+
+        std::cout << "Using Trigger selection "<< std::endl;
 
 	// *** get Handle to the TriggerEvent
 	edm::Handle<trigger::TriggerEvent> triggerEventHandle_;
@@ -535,7 +541,7 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 		std::cout << "HLT TriggerResults with label " << hlTriggerResults_ << " not found!";
 		return;
 	}
-          Total_Events++;
+        //  Total_Events++;
 
 	// Only events in which the path actually fired had stored the filter results and products:	  
           for (unsigned int i=0; i<triggerName_.size(); i++) {   
@@ -566,6 +572,7 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 
       }// loop trigger names
 
+    }// end trigger slection
 
 	//  reco::Vertex vertex;
 	std::vector<reco::Muon> myLeptons;
