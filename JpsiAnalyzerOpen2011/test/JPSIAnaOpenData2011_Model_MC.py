@@ -23,7 +23,7 @@ process.source.lumisToProcess.extend(myLumis)
 '''
 process.TFileService = cms.Service ('TFileService',
     fileName = cms.string (
-    'histojpsi.root'
+    'histojpsiMC.root'
     )
 )
  
