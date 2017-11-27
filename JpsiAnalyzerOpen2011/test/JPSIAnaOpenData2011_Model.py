@@ -34,7 +34,7 @@ process.demo = cms.EDAnalyzer('JpsiAnalyzerOpen2011',
 	TriggerResultsTag = cms.untracked.InputTag("TriggerResults", "", "HLT"),
         TriggerEventTag = cms.untracked.InputTag("hltTriggerSummaryAOD", "", "HLT"),
         #PathName = cms.untracked.vstring("HLT_DoubleMu7_v"),
-        PathName = cms.untracked.vstring(["HLT_Dimuon10_Jpsi_Barrel_v1","HLT_Dimuon7_PsiPrime"]),
+        PathName = cms.untracked.vstring(["HLT_Dimuon10_Jpsi_Barrel_v","HLT_Dimuon7_PsiPrime_v"]),
         # RECO Labels
         primaryVertexProducer = cms.InputTag("offlinePrimaryVertices"),
         recoMuonsLabel = cms.InputTag("muons"), 
