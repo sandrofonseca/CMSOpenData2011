@@ -165,8 +165,8 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		edm::InputTag hlTriggerEvent_;      // Input tag for TriggerEvent
 		//std::string triggerName_;
                 std::vector<std::string> triggerName_;
-
-		edm::InputTag hlTriggerResults_;    // Input tag for TriggerResults
+                std::vector<std::string> NameTrigger; 
+             	edm::InputTag hlTriggerResults_;    // Input tag for TriggerResults
 		edm::InputTag collectionName_;
 		bool debug;
 		//Counters
@@ -379,6 +379,7 @@ JpsiAnalyzerOpen2011::~JpsiAnalyzerOpen2011()
 
 	// do anything here that needs to be done at desctruction time
 	// (e.g. close files, deallocate resources etc.)
+        std::vector<std::string>().swap(NameTrigger);
 	std::vector<double>().swap(VectorMuon_Pt);
 	std::vector<double>().swap(VectorMuon_Eta);
 	std::vector<double>().swap(VectorMuon_Phi);
@@ -555,7 +556,7 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	const unsigned int numberOfHltPaths = HLTR->size();
 	//const unsigned int numberOfHltFilters = triggerEventHandle_->sizeFilters();
 
-
+         NameTrigger.push_back(triggerName_[i]);
 
 	unsigned int pathIndex = triggerIndex(iEvent,HLTR,triggerName_[i]);
 	if (pathIndex>=numberOfHltPaths) {
@@ -623,7 +624,8 @@ JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 				HistoMuonTight_Pt->Fill(muon->pt()) ;
 				HistoMuonTight_Eta->Fill(muon->eta()) ;
 				HistoMuonTight_Phi->Fill(muon->phi()) ;
-				HistoMuonTight_Charge->Fill(muon->charge()) ;			HistoMuonTight_Mass->Fill(muon->mass());
+				HistoMuonTight_Charge->Fill(muon->charge()) ;		
+                        	HistoMuonTight_Mass->Fill(muon->mass());
 				HistoMuonTight_Mass->Fill(muon->mass());
 
 
@@ -832,6 +834,15 @@ JpsiAnalyzerOpen2011::beginJob()
 	AnalysisTree->Branch("irun", &irun, "irun/I");
 	AnalysisTree->Branch("lumiblock", &lumiBlock, "lumiblock/I" );
 	AnalysisTree->Branch("Total_Events", &Total_Events, "Total_Events/I");
+        
+        // Trigger Info Branches
+
+        AnalysisTree->Branch("HLTriggerName", &NameTrigger);
+
+        AnalysisTree->Branch("TriggerAcceptedID", &countInAccepted, "countInAccepted/I");
+        AnalysisTree->Branch("TriggeredFiredID", &countInTriggered, "countInTriggered/I");
+  
+     
 	AnalysisTree->Branch("Muons", &CounterMuons, "CounterMuons/I");
 	AnalysisTree->Branch("TrackerMuon", &TrackerMuon, "TrackerMuon/I");
 	AnalysisTree->Branch("GlobalMuon", &GlobalMuon, "GlobalMuon/I");
@@ -933,12 +944,15 @@ JpsiAnalyzerOpen2011::endJob()
 	AnalysisTree->Fill();
  
 	std::cout << "Total_Events: " << Total_Events << std::endl; 
-         for (unsigned int i=0; i<triggerName_.size(); i++) {	
+        if(triggerflag_){ 
+        for (unsigned int i=0; i<triggerName_.size(); i++) {	
         
          std::cout<<" Path: " <<  triggerName_[i] << std::endl;
         }
-        std::cout<<" N of Evts using Trigger Fired :"<< countInTriggered << std::endl; 
-	std::cout << "Muons after Trigger: " << CounterMuons << std::endl;
+        std::cout<<" N of Evts using Trigger Fired :"<< countInTriggered << std::endl;
+       }
+ 
+	std::cout << "Muons Multiplicity: " << CounterMuons << std::endl;
 	std::cout << "TMOneStationTight: "<< TMOneStationTight<<std::endl;
 	std::cout << "NumberOfValidMuonHits: " << NumberOfValidMuonHits << std::endl;
 	std::cout << "pixelLayersWithMeasurement > 1: " << pixelLayersWithMeasurement << std::endl;
